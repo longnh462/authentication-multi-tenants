@@ -6,6 +6,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "migration:public:run": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:run",
+    "migration:public:revert": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:revert",
+    "migration:public:generate": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:generate src/database/migrations/public/migration",
+    "migration:tenant:run": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:run",
+    "migration:tenant:generate": "typeorm-ts-node-commonjs -d src/database/data-source.ts migration:generate src/database/migrations/tenant/migration",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -22,6 +27,7 @@
   "dependencies": {
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
