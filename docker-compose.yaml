@@ -3,7 +3,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: postgres
+    container_name: auth-multi-tenants-postgres
     restart: always
     environment:
       POSTGRES_USER: ${DATABASE_USER}

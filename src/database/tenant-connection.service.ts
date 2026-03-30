@@ -24,7 +24,7 @@ export class TenantConnectionService implements OnApplicationShutdown {
   ) {}
 
   async getConnection(tenantSlug: string): Promise<DataSource> {
-    // Trả về connection đã cache nếu có
+    // return connection from cache if exists
     if (this.pool.has(tenantSlug)) {
       return this.pool.get(tenantSlug)!;
     }
@@ -45,7 +45,7 @@ export class TenantConnectionService implements OnApplicationShutdown {
       synchronize: false,
       logging: process.env.NODE_ENV !== 'production',
       extra: {
-        max: 5, // giới hạn pool per-tenant, tránh quá tải DB
+        max: 5, // limit pool per-tenant, avoid DB overload
         ssl: this.dbConfig.sslEnabled
           ? { rejectUnauthorized: this.dbConfig.rejectUnauthorized }
           : undefined,
@@ -59,13 +59,12 @@ export class TenantConnectionService implements OnApplicationShutdown {
     return ds;
   }
 
-  // Gọi khi admin tạo tenant mới
-  // Tạo schema + chạy migration cho schema đó
+  // Called when admin creates a new tenant
+  // Create schema + run migration for that schema
   async provisionSchema(tenantSlug: string): Promise<void> {
     const schema = this.toSchemaName(tenantSlug);
 
-    // CREATE SCHEMA không hỗ trợ parameterized query
-    // → phải sanitize slug trước (đã làm trong toSchemaName)
+    // Create schema if not exists (PostgreSQL)
     await this.publicDs.query(
       `CREATE SCHEMA IF NOT EXISTS "${schema}"`,
     );
@@ -76,15 +75,13 @@ export class TenantConnectionService implements OnApplicationShutdown {
     this.logger.log(`Schema provisioned: ${schema}`);
   }
 
-  // "company-abc" → "tenant_company_abc"
-  // Sanitize để tránh SQL injection qua schema name
   toSchemaName(slug: string): string {
     const sanitized = slug.toLowerCase().replace(/[^a-z0-9_]/g, '_');
     if (!sanitized) throw new Error(`Invalid tenant slug: "${slug}"`);
     return `tenant_${sanitized}`;
   }
 
-  // Đóng tất cả connections khi app shutdown
+  // Close all connections on app shutdown
   async onApplicationShutdown(): Promise<void> {
     await Promise.all([...this.pool.values()].map((ds) => ds.destroy()));
     this.logger.log('All tenant connections closed');

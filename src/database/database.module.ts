@@ -3,6 +3,7 @@ import databaseConfig from 'src/config/database.config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import type { ConfigType } from '@nestjs/config';
 import { TenantEntity } from 'src/modules/tenant/entities/tenant.entity';
+import { TenantConnectionService } from './tenant-connection.service';
 
 @Module({
     providers: [
@@ -20,7 +21,7 @@ import { TenantEntity } from 'src/modules/tenant/entities/tenant.entity';
                     password: cfg.password,
                     database: cfg.name,
                     schema: 'public',
-                    entities: [TenantEntity],      // chỉ public entities
+                    entities: [TenantEntity],
                     synchronize: false,
                     logging: process.env.NODE_ENV !== 'production',
                     extra: {
@@ -32,9 +33,11 @@ import { TenantEntity } from 'src/modules/tenant/entities/tenant.entity';
 
                 } as DataSourceOptions);
                 return ds.initialize();
-            }
-        }
+            },
+            inject: [databaseConfig.KEY],
+        },
+        TenantConnectionService,
     ],
-    exports: ['PUBLIC_DATA_SOURCE'],
+    exports: ['PUBLIC_DATA_SOURCE', TenantConnectionService],
 })
 export class DatabaseModule { }
