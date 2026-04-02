@@ -14,8 +14,8 @@ export default new DataSource({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   logging: process.env.NODE_ENV !== 'production',
-  entities: [__dirname + '/entities/*.entity{.ts,.js}'],
-  migrations: [__dirname + '/migrations/*.ts'],
+  entities: [__dirname + '/../modules/**/entities/*.entity{.ts,.js}'],
+  migrations: [__dirname + '/migrations/*{.ts,.js}'],
   extra: {
     max: 5,
     ssl:
