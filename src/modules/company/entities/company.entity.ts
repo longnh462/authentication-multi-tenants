@@ -18,7 +18,7 @@ const TABLE_INFO = {
 }
 
 @Entity(TABLE_INFO.name)
-export class Company extends BaseEntity {
+export class CompanyEntity extends BaseEntity {
     @PrimaryColumn('uuid', { name: TABLE_INFO.columns.companyId, type: 'uuid' })
     companyId: string;
 
