@@ -1,6 +1,6 @@
-import { BaseEntity } from "../../../database/entities/base.entity";
+    import { BaseEntity } from "../../../database/entities/base.entity";
 import { uuidv7 } from "uuidv7";
-import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, Unique } from "typeorm";
 import { CompanyEntity } from "../../company/entities/company.entity";
 
 const TABLE_INFO = {
@@ -20,6 +20,7 @@ const TABLE_INFO = {
 
 }
 
+@Unique('uq_user_email_company', ['userEmail', 'company'])
 @Entity(TABLE_INFO.name)
 export class UserEntity extends BaseEntity {
     @PrimaryColumn('uuid', { name: TABLE_INFO.columns.userId, type: 'uuid' })
@@ -30,7 +31,7 @@ export class UserEntity extends BaseEntity {
         if (!this.userId) this.userId = uuidv7();
     }
 
-    @Column({ name: TABLE_INFO.columns.userEmail, unique: true, nullable: false })
+    @Column({ name: TABLE_INFO.columns.userEmail, nullable: false })
     userEmail: string;
 
     @Column({ name: TABLE_INFO.columns.hashedPassword, nullable: false })

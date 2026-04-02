@@ -1,4 +1,5 @@
-import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { UserEntity } from './../../user/entities/user.entity';
+import { CompanyEntity } from './../../company/entities/company.entity';
 import {
     CreateDateColumn,
     Entity,
@@ -10,19 +11,21 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({
-    name: 'session',
-})
+@Entity({ name: 'session' })
 export class SessionEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => UserEntity)
+    @Column()
+    hash: string;
+
+    @ManyToOne(() => UserEntity, { nullable: false, onDelete: 'CASCADE' })
     @Index()
     user: UserEntity;
 
-    @Column()
-    hash: string;
+    @ManyToOne(() => CompanyEntity, { nullable: false, onDelete: 'CASCADE' })
+    @Index()
+    company: CompanyEntity;
 
     @CreateDateColumn()
     createdAt: Date;
