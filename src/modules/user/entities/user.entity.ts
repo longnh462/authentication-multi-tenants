@@ -1,4 +1,4 @@
-import { BaseEntity } from "src/database/base.entity";
+import { BaseEntity } from "src/database/entities/base.entity";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 const TABLE_INFO = {
