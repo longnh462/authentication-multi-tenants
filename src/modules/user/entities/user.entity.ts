@@ -1,7 +1,7 @@
 import { BaseEntity } from "../../../database/entities/base.entity";
 import { uuidv7 } from "uuidv7";
-import { BeforeInsert, Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryColumn } from "typeorm";
-import { CompanyEntity } from "src/modules/company/entities/company.entity";
+import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { CompanyEntity } from "../../company/entities/company.entity";
 
 const TABLE_INFO = {
     name: 'user',
